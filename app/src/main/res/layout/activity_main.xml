@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.fredo.lylesworkoutsapp.MainActivity">
+
+    <EditText
+        android:hint="@string/howManyIntervals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/numberOfIntervals"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:hint="@string/intervalLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/numberOfIntervals"
+        android:layout_alignLeft="@+id/numberOfIntervals"
+        android:layout_alignStart="@+id/numberOfIntervals"
+        android:id="@+id/intervalDuration"/>
+
+    <EditText
+        android:hint="@string/restDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/intervalDuration"
+        android:layout_alignLeft="@+id/intervalDuration"
+        android:layout_alignStart="@+id/intervalDuration"
+        android:id="@+id/restDuration"/>
+
+    <fragment
+        class="com.example.fredo.lylesworkoutsapp.TimersFragment"
+        android:id="@+id/timersFrag"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/restDuration"/>
+</RelativeLayout>

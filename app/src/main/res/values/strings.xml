@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lyle\'s Workouts App</string>
+    <string name="howManyIntervals">How many intervals?</string>
+    <string name="intervalLength">Interval duration (mm ss)</string>
+    <string name="restDuration">Rest duration (mm ss)</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
