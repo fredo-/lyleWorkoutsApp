@@ -44,38 +44,10 @@
 
     <fragment
         class="com.example.fredo.lylesworkoutsapp.TimersFragment"
+        android:layout_marginTop="12dp"
         android:id="@+id/timersFrag"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_timers"
-        android:layout_below="@+id/pauseBtn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp" />
-
-    <Button
-        android:text="Pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pauseBtn"
-        android:layout_below="@+id/restDuration"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/startBtn"
-        android:layout_below="@+id/restDuration"
-        android:layout_toLeftOf="@+id/pauseBtn"
-        android:layout_toStartOf="@+id/pauseBtn" />
-
-    <Button
-        android:text="Reset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/resetBtn"
-        android:layout_toRightOf="@+id/pauseBtn"
-        android:layout_toEndOf="@+id/pauseBtn"
-        android:layout_alignBottom="@+id/pauseBtn" />
+        android:layout_below="@id/restDuration"
+        tools:layout="@layout/fragment_timers" />
 </RelativeLayout>
