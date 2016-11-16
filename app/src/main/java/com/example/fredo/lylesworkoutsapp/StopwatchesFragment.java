@@ -24,7 +24,10 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 
     private OnFragmentInteractionListener mListener;
     private int timeElapsed = 0;
+    private int interTimeElapsed = 0;
+    private int restTimeElapsed = 0;
     private boolean running;
+    private boolean intervalRunning = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,31 +49,82 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     }
 
     private void runStopwatches(View layout) {
-        int restDur = 180; //seconds
-        final int intervalDur = 180;  //seconds
+        final int restDur = 15; //seconds
+        final int intervalDur = 5;  //seconds
         final int numIntervals = 10;
+        final int totalDuration= (restDur + intervalDur) * numIntervals;
         final TextView numIntervalDisp    = (TextView)layout.findViewById(R.id.intervalsLeftDisplay);
         final TextView intervalDisp       = (TextView)layout.findViewById(R.id.intervalTimerDisplay);
-        TextView restDisp                 = (TextView)layout.findViewById(R.id.restTimerDisplay);
+        final TextView restDisp           = (TextView)layout.findViewById(R.id.restTimerDisplay);
         final TextView totalTimerDisp     = (TextView)layout.findViewById(R.id.totalTimerDisplay);
+
+        String initIntervalTimeToDisp   = getTimeToDisplay(getUpdatedTimer(intervalDur, interTimeElapsed));
+        String initRestTimeToDisp       = getTimeToDisplay(getUpdatedTimer(restDur, restTimeElapsed));
+        intervalDisp.setText(initIntervalTimeToDisp);
+        restDisp.setText(initRestTimeToDisp);
+
         final Handler handler = new Handler();
         handler.post(new Runnable(){
             @Override
             public void run() {
-                numIntervalDisp.setText(Integer.toString(numIntervals));
-                String intervalTimeToDisp = String.format(
-                        Locale.US,
-                        "%d:%02d:%02d",
-                        (intervalDur-timeElapsed)/3600,
-                        (intervalDur-timeElapsed)/60,
-                        (intervalDur-timeElapsed)%60);
-                intervalDisp.setText(intervalTimeToDisp);
+                int intervalsLeft   = getIntervalsLeft(numIntervals, timeElapsed, restDur, intervalDur);
+                int intervalTimer   = getUpdatedTimer(intervalDur, interTimeElapsed);
+                int restTimer       = getUpdatedTimer(restDur, restTimeElapsed);
+                int totalTimer      = getUpdatedTimer(totalDuration, timeElapsed);
+
+                String totalTimeToDisp      = getTimeToDisplay(totalTimer);
+                numIntervalDisp.setText(String.format(Locale.US, "%d", intervalsLeft));
+                totalTimerDisp.setText(totalTimeToDisp);
+
+                String intervalTimeToDisp;
+                String restTimeToDisp;
+
                 if(running){
-                    timeElapsed++;
+
+                    if( (intervalTimer==1) || (restTimer==1) ) {
+                        intervalRunning = !intervalRunning;
+                        intervalTimer = intervalDur;
+                        restTimer = restDur;
+                        intervalTimeToDisp = getTimeToDisplay(intervalTimer);
+                        restTimeToDisp = getTimeToDisplay(restTimer);
+                        intervalDisp.setText(intervalTimeToDisp);
+                        restDisp.setText(restTimeToDisp);
+                    }
+
+                    if(intervalRunning) {
+                        intervalTimeToDisp = getTimeToDisplay(intervalTimer);
+                        intervalDisp.setText(intervalTimeToDisp);
+                        interTimeElapsed++;
+                    }else {
+                        restTimeToDisp = getTimeToDisplay(restTimer);
+                        restDisp.setText(restTimeToDisp);
+                        restTimeElapsed++;
+                    }
+                        timeElapsed++;
+                    if(timeElapsed==totalDuration)
+                        running = false;
                 }
                 handler.postDelayed(this,1000);
             }
         });
+    }
+
+    private int getIntervalsLeft(int numIntervals, int timeElapsed, int restDur, int intervalDur) {
+        return numIntervals - timeElapsed/(restDur + intervalDur);
+    }
+
+    private int getUpdatedTimer(int intervalDur, int intervalTimeElapsed) {
+        return intervalDur - (intervalTimeElapsed % intervalDur);
+    }
+
+    private String getTimeToDisplay(int timer) {
+        String timeFormat = "%d:%02d:%02d";
+        return String.format(
+                                Locale.US,
+                                timeFormat,
+                                (timer / 3600) % 24,
+                                (timer / 60) % 60,
+                                (timer % 60));
     }
 
     @Override
@@ -98,6 +152,8 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 
     private void onClickReset() {
         timeElapsed = 0;
+        interTimeElapsed = 0;
+        restTimeElapsed = 0;
     }
 
     /**
