@@ -43,7 +43,7 @@
         android:id="@+id/restDuration"/>
 
     <fragment
-        class="com.example.fredo.lylesworkoutsapp.TimersFragment"
+        class="com.example.fredo.lylesworkoutsapp.StopwatchesFragment"
         android:layout_marginTop="12dp"
         android:id="@+id/timersFrag"
         android:layout_width="match_parent"

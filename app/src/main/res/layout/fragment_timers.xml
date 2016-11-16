@@ -2,13 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.example.fredo.lylesworkoutsapp.TimersFragment">
+    tools:context="com.example.fredo.lylesworkoutsapp.StopwatchesFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
@@ -31,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/resetBtn"
                 android:text="Reset" />
-
         </LinearLayout>
 
         <TextView
