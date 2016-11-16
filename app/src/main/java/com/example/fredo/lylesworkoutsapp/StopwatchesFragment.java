@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,14 +51,16 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         final int numIntervals = 10;
         final TextView numIntervalDisp    = (TextView)layout.findViewById(R.id.intervalsLeftDisplay);
         final TextView intervalDisp       = (TextView)layout.findViewById(R.id.intervalTimerDisplay);
-        TextView restDisp           = (TextView)layout.findViewById(R.id.restTimerDisplay);
+        TextView restDisp                 = (TextView)layout.findViewById(R.id.restTimerDisplay);
         final TextView totalTimerDisp     = (TextView)layout.findViewById(R.id.totalTimerDisplay);
         final Handler handler = new Handler();
         handler.post(new Runnable(){
             @Override
             public void run() {
                 numIntervalDisp.setText(Integer.toString(numIntervals));
-                String intervalTimeToDisp = String.format("%d:%02d:%02d",
+                String intervalTimeToDisp = String.format(
+                        Locale.US,
+                        "%d:%02d:%02d",
                         (intervalDur-timeElapsed)/3600,
                         (intervalDur-timeElapsed)/60,
                         (intervalDur-timeElapsed)%60);
