@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +28,9 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     private int timeElapsed = 0;
     private int interTimeElapsed = 0;
     private int restTimeElapsed = 0;
+    private int restDur = 1;
+    private int intervalDur = 1;
+    private int numIntervals = 1;
     private boolean running;
     private boolean intervalIsRunning;
 
@@ -40,7 +43,7 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_timers, container, false);
-        runStopwatches(layout);
+//        runStopwatches(layout);
         Button startBtn = (Button)layout.findViewById(R.id.startBtn);
         Button pauseBtn = (Button)layout.findViewById(R.id.pauseBtn);
         Button resetBtn = (Button)layout.findViewById(R.id.resetBtn);
@@ -50,10 +53,11 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         return layout;
     }
 
-    private void runStopwatches(View layout) {
-        final int restDur = 15; //seconds
-        final int intervalDur = 5;  //seconds
-        final int numIntervals = 10;
+    public void runStopwatches() {
+        View layout = getView();
+//        final int restDur = 15; //seconds
+//        final int intervalDur = 5;  //seconds
+//        final int numIntervals = 10;
         final int totalDuration= (restDur + intervalDur) * numIntervals;
         final TextView numIntervalDisp    = (TextView)layout.findViewById(R.id.intervalsLeftDisplay);
         final TextView intervalDisp       = (TextView)layout.findViewById(R.id.intervalTimerDisplay);
@@ -162,6 +166,12 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         timeElapsed = 0;
         interTimeElapsed = 0;
         restTimeElapsed = 0;
+    }
+
+    public void setWorkoutDetails(int numIntervals, int intervalDur, int restDur) {
+        this.numIntervals = numIntervals;
+        this.intervalDur = intervalDur;
+        this.restDur = restDur;
     }
 
     /**
