@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LylesWorkoutsApp.iml" filepath="$PROJECT_DIR$/LylesWorkoutsApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lyleWorkoutsApp.iml" filepath="$PROJECT_DIR$/lyleWorkoutsApp.iml" />
     </modules>
   </component>
 </project>

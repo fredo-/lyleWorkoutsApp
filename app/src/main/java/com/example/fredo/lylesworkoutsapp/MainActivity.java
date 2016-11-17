@@ -22,16 +22,12 @@ public class MainActivity extends AppCompatActivity implements StopwatchesFragme
     }
 
     public void onEnterClicked(View view){
-        StopwatchesFragment stopwatchesFrag = new StopwatchesFragment();
+        StopwatchesFragment stopwatchesFrag = (StopwatchesFragment)getFragmentManager().findFragmentById(R.id.timersFrag);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         int numIntervals    = Integer.parseInt(((EditText)findViewById(R.id.numberOfIntervals)).getText().toString());
         int intervalDur     = Integer.parseInt(((EditText)findViewById(R.id.intervalDuration)).getText().toString());
         int restDur         = Integer.parseInt(((EditText)findViewById(R.id.restDuration)).getText().toString());
         stopwatchesFrag.setWorkoutDetails(numIntervals, intervalDur, restDur);
-        fragmentTransaction.replace(R.id.timersFrag, stopwatchesFrag);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();
-        stopwatchesFrag.runStopwatches();
+//        stopwatchesFrag.runStopwatches();
     }
 }

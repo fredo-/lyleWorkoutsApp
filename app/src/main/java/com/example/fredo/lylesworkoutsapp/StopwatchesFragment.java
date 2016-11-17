@@ -13,6 +13,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -28,11 +37,27 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     private int timeElapsed = 0;
     private int interTimeElapsed = 0;
     private int restTimeElapsed = 0;
-    private int restDur = 1;
-    private int intervalDur = 1;
-    private int numIntervals = 1;
+    private int restDur;
+    private int intervalDur;
+    private int numIntervals;
+    private int totalDuration;
     private boolean running;
     private boolean intervalIsRunning;
+    private Handler handler;
+
+    TextView intervalDisp;
+    TextView totalTimerDisp;
+
+    private int totalInt;
+
+    private Subscription totalSubscription;
+    private Subscription intervalSubscription;
+    private Observable<Long> totalObservable;
+    private Observable<Long>  intervalObservable;
+    private Observable<Long>   rangeObservable;
+
+    public StopwatchesFragment(){
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +75,9 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         startBtn.setOnClickListener(this);
         pauseBtn.setOnClickListener(this);
         resetBtn.setOnClickListener(this);
+
+        intervalDisp        = (TextView)layout.findViewById(R.id.intervalTimerDisplay);
+        totalTimerDisp      = (TextView)layout.findViewById(R.id.totalTimerDisplay);
         return layout;
     }
 
@@ -58,18 +86,15 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 //        final int restDur = 15; //seconds
 //        final int intervalDur = 5;  //seconds
 //        final int numIntervals = 10;
-        final int totalDuration= (restDur + intervalDur) * numIntervals;
         final TextView numIntervalDisp    = (TextView)layout.findViewById(R.id.intervalsLeftDisplay);
-        final TextView intervalDisp       = (TextView)layout.findViewById(R.id.intervalTimerDisplay);
         final TextView restDisp           = (TextView)layout.findViewById(R.id.restTimerDisplay);
-        final TextView totalTimerDisp     = (TextView)layout.findViewById(R.id.totalTimerDisplay);
 
         String initIntervalTimeToDisp   = getTimeToDisplay(getUpdatedTimer(intervalDur, interTimeElapsed));
         String initRestTimeToDisp       = getTimeToDisplay(getUpdatedTimer(restDur, restTimeElapsed));
         intervalDisp.setText(initIntervalTimeToDisp);
         restDisp.setText(initRestTimeToDisp);
 
-        final Handler handler = new Handler();
+        /*handler = new Handler();
         handler.post(new Runnable(){
             @Override
             public void run() {
@@ -91,12 +116,14 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
                 if(running){
                     intervalIsRunning = checkTimersProgress(intervalTimer, restTimer, intervalIsRunning);
                     incrementTimesElapsed(intervalIsRunning);
-                    if(timeElapsed==totalDuration)
+                    if(timeElapsed==totalDuration) {
                         running = false;
+                        handler.removeCallbacks(this);
+                    }
                 }
                 handler.postDelayed(this,1000);
             }
-        });
+        });*/
     }
 
     private void incrementTimesElapsed(boolean runIntervalTimer) {
@@ -156,6 +183,8 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     private void onClickStart() {
         running = true;
         intervalIsRunning = true;
+        startInterval();
+        startTotalTimer();
     }
 
     private void onClickPause() {
@@ -172,6 +201,8 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         this.numIntervals = numIntervals;
         this.intervalDur = intervalDur;
         this.restDur = restDur;
+        this.totalDuration= (restDur + intervalDur) * numIntervals;
+
     }
 
     /**
@@ -212,5 +243,70 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    public  void startInterval() {
+        intervalSubscription =
+        Observable.interval(1, TimeUnit.SECONDS)
+               .take(intervalDur)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Long>() {
+                    @Override
+                    public void onCompleted() {
+                        //call startRest();
+                        //onCompleted is only called when you have a .take(limit) means do limit number of emissions
+                        intervalSubscription.unsubscribe();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        if(running){
+                            int intervalTimer = getUpdatedTimer(intervalDur, interTimeElapsed);
+                            intervalDisp.setText(getTimeToDisplay(intervalTimer));
+                            interTimeElapsed++;
+                        }
+                    }
+                });
+    }
+
+
+
+    public void startTotalTimer(){
+        if(!totalSubscription.isUnsubscribed()){
+            return;
+        }
+        totalSubscription =
+        Observable.interval(1, TimeUnit.SECONDS)
+                .take(totalDuration)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Long>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Long aLong) {
+
+                if(running){
+                    int intervalTimer = getUpdatedTimer(totalDuration, timeElapsed);
+                    totalTimerDisp.setText(getTimeToDisplay(intervalTimer));
+                    timeElapsed++;
+                }
+            }
+        });
+
+
     }
 }
