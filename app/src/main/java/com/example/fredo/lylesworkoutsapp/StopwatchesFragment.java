@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,13 @@ import java.util.Locale;
  */
 public class StopwatchesFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = "FlippingTimer";
     private OnFragmentInteractionListener mListener;
     private int timeElapsed = 0;
     private int interTimeElapsed = 0;
     private int restTimeElapsed = 0;
     private boolean running;
-    private boolean intervalRunning = true;
+    private boolean intervalIsRunning;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,35 +74,19 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
                 int restTimer       = getUpdatedTimer(restDur, restTimeElapsed);
                 int totalTimer      = getUpdatedTimer(totalDuration, timeElapsed);
 
-                String totalTimeToDisp      = getTimeToDisplay(totalTimer);
                 numIntervalDisp.setText(String.format(Locale.US, "%d", intervalsLeft));
-                totalTimerDisp.setText(totalTimeToDisp);
 
-                String intervalTimeToDisp;
-                String restTimeToDisp;
+                String totalTimeToDisp      = getTimeToDisplay(totalTimer);
+                String intervalTimeToDisp   = getTimeToDisplay(intervalTimer);
+                String restTimeToDisp       = getTimeToDisplay(restTimer);
+
+                totalTimerDisp.setText(totalTimeToDisp);
+                intervalDisp.setText(intervalTimeToDisp);
+                restDisp.setText(restTimeToDisp);
 
                 if(running){
-
-                    if( (intervalTimer==1) || (restTimer==1) ) {
-                        intervalRunning = !intervalRunning;
-                        intervalTimer = intervalDur;
-                        restTimer = restDur;
-                        intervalTimeToDisp = getTimeToDisplay(intervalTimer);
-                        restTimeToDisp = getTimeToDisplay(restTimer);
-                        intervalDisp.setText(intervalTimeToDisp);
-                        restDisp.setText(restTimeToDisp);
-                    }
-
-                    if(intervalRunning) {
-                        intervalTimeToDisp = getTimeToDisplay(intervalTimer);
-                        intervalDisp.setText(intervalTimeToDisp);
-                        interTimeElapsed++;
-                    }else {
-                        restTimeToDisp = getTimeToDisplay(restTimer);
-                        restDisp.setText(restTimeToDisp);
-                        restTimeElapsed++;
-                    }
-                        timeElapsed++;
+                    intervalIsRunning = checkTimersProgress(intervalTimer, restTimer, intervalIsRunning);
+                    incrementTimesElapsed(intervalIsRunning);
                     if(timeElapsed==totalDuration)
                         running = false;
                 }
@@ -109,12 +95,33 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         });
     }
 
+    private void incrementTimesElapsed(boolean runIntervalTimer) {
+        if(runIntervalTimer) {
+            interTimeElapsed++;
+        }else {
+            restTimeElapsed++;
+        }
+        timeElapsed++;
+    }
+
+    private boolean checkTimersProgress(int intervalTimer, int restTimer, boolean initialValue) {
+        boolean intervalRunning = initialValue;
+        if(intervalTimer==0) {
+            intervalRunning = false;
+            interTimeElapsed++;
+        }else if(restTimer==0){
+            intervalRunning = true;
+            restTimeElapsed++;
+        }
+        return intervalRunning;
+    }
+
     private int getIntervalsLeft(int numIntervals, int timeElapsed, int restDur, int intervalDur) {
         return numIntervals - timeElapsed/(restDur + intervalDur);
     }
 
     private int getUpdatedTimer(int intervalDur, int intervalTimeElapsed) {
-        return intervalDur - (intervalTimeElapsed % intervalDur);
+        return intervalDur - (intervalTimeElapsed % (intervalDur+1));
     }
 
     private String getTimeToDisplay(int timer) {
@@ -144,6 +151,7 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 
     private void onClickStart() {
         running = true;
+        intervalIsRunning = true;
     }
 
     private void onClickPause() {
