@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -11,57 +10,57 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <EditText
-        android:hint="@string/howManyIntervals"
+        android:id="@+id/numberOfIntervals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/numberOfIntervals"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/howManyIntervals"
+        android:inputType="number" />
 
     <EditText
-        android:hint="@string/intervalLength"
+        android:id="@+id/intervalDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_below="@+id/numberOfIntervals"
         android:layout_alignLeft="@+id/numberOfIntervals"
         android:layout_alignStart="@+id/numberOfIntervals"
-        android:id="@+id/intervalDuration"/>
+        android:layout_below="@+id/numberOfIntervals"
+        android:ems="10"
+        android:hint="@string/intervalLength"
+        android:inputType="number" />
 
     <EditText
-        android:hint="@string/restDuration"
+        android:id="@+id/restDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_below="@+id/intervalDuration"
         android:layout_alignLeft="@+id/intervalDuration"
         android:layout_alignStart="@+id/intervalDuration"
-        android:id="@+id/restDuration"/>
+        android:layout_below="@+id/intervalDuration"
+        android:ems="10"
+        android:hint="@string/restDuration"
+        android:inputType="number" />
 
     <fragment
-        class="com.example.fredo.lylesworkoutsapp.StopwatchesFragment"
-        android:layout_marginTop="54dp"
         android:id="@+id/timersFrag"
+        class="com.example.fredo.lylesworkoutsapp.StopwatchesFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_timers"
-        android:layout_below="@+id/restDuration"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/restDuration"
+        android:layout_marginTop="54dp"
+        tools:layout="@layout/fragment_timers" />
 
     <Button
-        android:text="Enter"
+        android:id="@+id/enterBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/restDuration"
-        android:id="@+id/enterBtn"
-        android:onClick="onEnterClicked"
-        android:layout_alignRight="@+id/restDuration"
         android:layout_alignEnd="@+id/restDuration"
         android:layout_alignLeft="@+id/restDuration"
-        android:layout_alignStart="@+id/restDuration" />
+        android:layout_alignRight="@+id/restDuration"
+        android:layout_alignStart="@+id/restDuration"
+        android:layout_below="@+id/restDuration"
+        android:onClick="onEnterClicked"
+        android:text="Enter" />
 </RelativeLayout>

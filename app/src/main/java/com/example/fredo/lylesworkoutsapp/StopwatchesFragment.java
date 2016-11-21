@@ -58,10 +58,10 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         pauseBtn.setOnClickListener(this);
         resetBtn.setOnClickListener(this);
 
-        workoutDisp         = (TextView) layout.findViewById(R.id.intervalTimerDisplay);
-        restDisp            = (TextView) layout.findViewById(R.id.restTimerDisplay);
-        totalTimerDisp      = (TextView) layout.findViewById(R.id.totalTimerDisplay);
-        intervalsLeftDisp   = (TextView) layout.findViewById(R.id.intervalsLeftDisplay);
+        workoutDisp = (TextView) layout.findViewById(R.id.intervalTimerDisplay);
+        restDisp = (TextView) layout.findViewById(R.id.restTimerDisplay);
+        totalTimerDisp = (TextView) layout.findViewById(R.id.totalTimerDisplay);
+        intervalsLeftDisp = (TextView) layout.findViewById(R.id.intervalsLeftDisplay);
 
         setDefaultCountdownDisplays();
         startClock();
@@ -95,7 +95,7 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
                             int totalCountdown = getCountdownTimer(totalDuration, timeElapsed);
                             totalTimerDisp.setText(getTimerDisplay(totalCountdown));
                         }
-                        if (timeElapsed == (totalDuration+1)) {
+                        if (timeElapsed == (totalDuration + 1)) {
                             resetAllTimers();
                         }
                     }
@@ -143,8 +143,8 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     private void resetIntervalTimers() {
         workoutTimeElapsed = 0;
         restTimeElapsed = 0;
-        workoutDisp .setText(getTimerDisplay(workoutDur));
-        restDisp    .setText(getTimerDisplay(restDur));
+        workoutDisp.setText(getTimerDisplay(workoutDur));
+        restDisp.setText(getTimerDisplay(restDur));
     }
 
     private void resetAllTimers() {
@@ -167,10 +167,10 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 
 
     private void setDefaultCountdownDisplays() {
-        intervalsLeftDisp   .setText(String.format(Locale.US, "%d", numIntervals));
-        workoutDisp         .setText(getTimerDisplay(workoutDur));
-        restDisp            .setText(getTimerDisplay(restDur));
-        totalTimerDisp      .setText(getTimerDisplay(totalDuration));
+        intervalsLeftDisp.setText(String.format(Locale.US, "%d", numIntervals));
+        workoutDisp.setText(getTimerDisplay(workoutDur));
+        restDisp.setText(getTimerDisplay(restDur));
+        totalTimerDisp.setText(getTimerDisplay(totalDuration));
     }
 
     @Override
@@ -185,11 +185,11 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     }
 
     private void updateCountdownDisplays(boolean inWorkout) {
-        if(inWorkout) {
+        if (inWorkout) {
             workoutTimeElapsed++;
             int timer = getCountdownTimer(workoutDur, workoutTimeElapsed);
             workoutDisp.setText(getTimerDisplay(timer));
-        }else{
+        } else {
             restTimeElapsed++;
             int timer = getCountdownTimer(restDur, restTimeElapsed);
             restDisp.setText(getTimerDisplay(timer));
@@ -198,9 +198,9 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 
 
     private boolean stillInWorkoutCheck() {
-        if(restTimeElapsed == restDur || workoutTimeElapsed == workoutDur){
+        if (restTimeElapsed == restDur || workoutTimeElapsed == workoutDur) {
             inWorkout = !inWorkout;
-            if(restTimeElapsed == restDur) {
+            if (restTimeElapsed == restDur) {
                 intervalsLeft = intervalsLeft - 1;
             }
             resetIntervalTimers();
