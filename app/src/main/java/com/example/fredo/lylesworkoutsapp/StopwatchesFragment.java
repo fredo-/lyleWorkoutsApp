@@ -1,8 +1,11 @@
 package com.example.fredo.lylesworkoutsapp;
 
-import android.content.Context;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,13 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     private boolean timersAreOn;
     private boolean inWorkout;
 
+    NotificationCompat.Builder runBuilder;
+    NotificationCompat.Builder restBuilder;
+    NotificationManagerCompat notificationManager;
+
+    private int runId = 001;
+    private int restId = 002;
+
     TextView workoutDisp;
     TextView restDisp;
     TextView totalTimerDisp;
@@ -45,6 +55,22 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        runBuilder =
+                new NotificationCompat.Builder(getActivity())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("RUN!")
+                        .setVibrate(new long[]{0, 300, 100, 300, 100, 300})
+                        .setSound(Uri.parse("uri://sadfasdfasdf.mp3"))
+                        .setContentText("RUN!");
+
+        restBuilder =
+                new NotificationCompat.Builder(getActivity())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Rest")
+                        .setContentText("Rest")
+                        .setVibrate(new long[]{0, 1000});
+
+
     }
 
     @Override
@@ -68,6 +94,7 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
 
         return layout;
     }
+
 
     public void startClock() {
         clockSubscription = Observable
@@ -134,6 +161,9 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     private void startTimers() {
         timersAreOn = true;
         inWorkout = true;
+        notificationManager =
+                NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(runId, runBuilder.build());
     }
 
     private void pauseTimers() {
@@ -202,6 +232,9 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
             inWorkout = !inWorkout;
             if (restTimeElapsed == restDur) {
                 intervalsLeft = intervalsLeft - 1;
+                notificationManager.notify(runId, runBuilder.build());
+            } else {
+                notificationManager.notify(restId, restBuilder.build());
             }
             resetIntervalTimers();
         }
