@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -99,11 +100,13 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
     public void startClock() {
         clockSubscription = Observable
                 .interval(1, TimeUnit.SECONDS)
+                .take(totalDuration + 1)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Long>() {
                     @Override
                     public void onCompleted() {
-
+                        resetAllTimers();
+                        Toast.makeText(getActivity(), "YOU'RE DONE!!!", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -148,12 +151,15 @@ public class StopwatchesFragment extends Fragment implements View.OnClickListene
         switch (view.getId()) {
             case R.id.startBtn:
                 startTimers();
+                startClock();
                 break;
             case R.id.pauseBtn:
                 pauseTimers();
+                clockSubscription.unsubscribe();
                 break;
             case R.id.resetBtn:
                 resetAllTimers();
+                clockSubscription.unsubscribe();
                 break;
         }
     }
